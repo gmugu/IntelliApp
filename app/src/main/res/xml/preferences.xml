@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="安全管理">
+
+        <Preference
+            android:defaultValue="false"
+            android:key="@string/key_passwd_num"
+            android:title="修改数字密码">
+            <intent
+                android:targetClass="com.gmugu.intelliapp.ui.UpdatePasswordActivity"
+                android:targetPackage="com.gmugu.intelliapp" />
+        </Preference>
+        <PreferenceScreen android:title="手势密码">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_passwd_pattern"
+                android:title="手势密码" />
+            <com.gmugu.intelliapp.ui.preference.MyPreference
+                android:enabled="false"
+                android:key="updataPasswdPattern"
+                android:persistent="false"
+                android:title="修改手势密码" />
+
+        </PreferenceScreen>
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_passwd_finger"
+            android:title="指纹" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="消息管理">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_notification"
+            android:title="消息提醒" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="关于">
+        <Preference
+            android:summary="@string/version"
+            android:title="关于我们">
+            <intent
+                android:targetClass="com.gmugu.intelliapp.ui.AboutActivity"
+                android:targetPackage="com.gmugu.intelliapp" />
+        </Preference>
+        <!--<Preference android:title="退出登录">-->
+        <!--<intent-->
+        <!--android:targetClass="com.gmugu.intelliapp.ui.LoginActivity"-->
+        <!--android:targetPackage="com.gmugu.intelliapp" />-->
+        <!--</Preference>-->
+
+
+    </PreferenceCategory>
+</PreferenceScreen>
