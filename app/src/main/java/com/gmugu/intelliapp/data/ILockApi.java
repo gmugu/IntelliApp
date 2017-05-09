@@ -15,5 +15,8 @@ import rx.Observable;
 public interface ILockApi {
 
     @GET("bindDevice.cgi")
-    Observable<ResponseBody> bindDevice(@Query("index")int index, @Query("name") String name, @Query("code") String code);
+    Observable<ResponseBody> bindDevice(@Query("index") int index, @Query("name") String name, @Query("code") String code);
+
+    @GET("visitor.img")
+    Observable<ResponseBody> getVisitorImg();
 }

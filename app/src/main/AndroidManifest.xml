@@ -11,21 +11,19 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.MainActivity">
-
-        </activity>
-        <activity
-            android:name=".ui.LoginActivity"
-            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.LoginActivity">
+
         </activity>
         <activity android:name=".ui.LogActivity">
 
@@ -45,6 +43,16 @@
 
         <activity android:name=".ui.UpdatePasswordActivity" />
 
+
+        <receiver android:name="com.gmugu.intelliapp.msgrecvive.AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.gmugu.alarm.action" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.gmugu.intelliapp.msgrecvive.MessageService">
+
+        </service>
     </application>
 
 </manifest>

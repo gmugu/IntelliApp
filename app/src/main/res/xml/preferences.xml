@@ -16,7 +16,15 @@
                 android:defaultValue="false"
                 android:key="@string/key_passwd_pattern"
                 android:title="手势密码" />
-            <com.gmugu.intelliapp.ui.preference.MyPreference
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_passwd_pattern_login"
+                android:title="手势密码登录" />
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_passwd_pattern_uplock"
+                android:title="手势密码解锁" />
+            <Preference
                 android:enabled="false"
                 android:key="updataPasswdPattern"
                 android:persistent="false"
@@ -30,7 +38,12 @@
             android:key="@string/key_passwd_finger"
             android:title="指纹" />
     </PreferenceCategory>
-
+    <PreferenceCategory android:title="设备管理">
+        <Preference
+            android:key="bindDevice"
+            android:persistent="false"
+            android:title="绑定设备" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="消息管理">
         <SwitchPreference
             android:defaultValue="true"

@@ -40,7 +40,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             startActivityForResult(new Intent(this, UpdatePasswordActivity.class), REQ_SET_PASSWD);
             return;
         }
-        if (preference.getBoolean(getResources().getString(R.string.key_passwd_pattern), false)) {
+        if (preference.getBoolean(getResources().getString(R.string.key_passwd_pattern), false) && preference.getBoolean(getResources().getString(R.string.key_passwd_pattern_login), false)) {
             Intent compare = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN, null,
                     this, LockPatternActivity.class);
             startActivityForResult(compare, REQ_COMPARE_PATTERN);
@@ -71,12 +71,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
             case LockPatternActivity.RESULT_FAILED://用户多次失败
                 Log.d(TAG, "user failed");
-                Toast.makeText(this,"请尝试使用密码登录",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请尝试使用密码登录", Toast.LENGTH_SHORT).show();
                 break;
             case LockPatternActivity.RESULT_FORGOT_PATTERN:
                 // The user forgot the pattern and invoked your recovery Activity.
                 Log.d(TAG, "user forgot");
-                Toast.makeText(this,"请尝试使用密码登录",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请尝试使用密码登录", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

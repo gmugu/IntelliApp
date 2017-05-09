@@ -18,7 +18,6 @@ import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 public class ScanActivity extends AppCompatActivity implements QRCodeView.Delegate {
     private static final String TAG = ScanActivity.class.getSimpleName();
-    public static final int SUCCESS = 1;
     public static final int ERROR_CAMERA = 2;
 
     private QRCodeView mQRCodeView;
@@ -67,7 +66,7 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
 //        mQRCodeView.startSpot();
         Intent data = new Intent();
         data.putExtra("result",result);
-        setResult(SUCCESS,data);
+        setResult(RESULT_OK,data);
         finish();
     }
 

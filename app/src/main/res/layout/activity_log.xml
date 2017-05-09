@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="18dp"
+        android:text="门锁最近日志记录"
+        android:textColor="#fff"
+        android:textSize="8pt" />
+
+    <TextView
+        android:id="@+id/elv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="无日志记录"
+        android:textSize="10pt" />
+
+    <ExpandableListView
+        android:id="@+id/elv_timer_shaft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:groupIndicator="@null"
+        android:visibility="gone" />
+</LinearLayout>

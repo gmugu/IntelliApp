@@ -5,6 +5,8 @@
     <string name="key_passwd_finger">key_passwd_finger</string>
     <string name="key_passwd_num">key_passwd_num</string>
     <string name="key_passwd_pattern">key_passwd_pattern</string>
+    <string name="key_passwd_pattern_uplock">key_passwd_pattern_uplock</string>
+    <string name="key_passwd_pattern_login">key_passwd_pattern_login</string>
     <string name="key_notification">key_notification</string>
 
     <string name="key_num_passwd">key_num_passwd</string>
