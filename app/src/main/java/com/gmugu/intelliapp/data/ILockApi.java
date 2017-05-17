@@ -20,6 +20,6 @@ public interface ILockApi {
     @GET("visitor.img")
     Observable<ResponseBody> getVisitorImg();
 
-    @GET("open.cgi")
-    Observable<Result> openLock(@Query("phoneMac") String phoneMac);
+    @GET("unlock.cgi")
+    Observable<Result> unlock(@Query("phoneMac") String phoneMac);
 }

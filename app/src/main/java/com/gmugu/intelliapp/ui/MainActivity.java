@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,15 +21,10 @@ import com.gmugu.intelliapp.R;
 import com.gmugu.intelliapp.data.ApiModule;
 import com.gmugu.intelliapp.data.model.Result;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import haibison.android.lockpattern.LockPatternActivity;
 import haibison.android.lockpattern.utils.AlpSettings;
-import okhttp3.ResponseBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import rx.Subscriber;
@@ -206,7 +200,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         progressDialog.setIndeterminate(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        ApiModule.provideLockApi().openLock(code)
+        ApiModule.provideLockApi().unlock(code)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Result>() {
