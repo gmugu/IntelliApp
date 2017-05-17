@@ -2,13 +2,13 @@
     <string name="app_name">智能门锁</string>
     <string name="version">v1.0.0</string>
 
-    <string name="key_passwd_finger">key_passwd_finger</string>
-    <string name="key_passwd_num">key_passwd_num</string>
-    <string name="key_passwd_pattern">key_passwd_pattern</string>
-    <string name="key_passwd_pattern_uplock">key_passwd_pattern_uplock</string>
-    <string name="key_passwd_pattern_login">key_passwd_pattern_login</string>
-    <string name="key_notification">key_notification</string>
+    <string name="key_is_passwd_finger">key_passwd_finger</string>
+    <string name="key_is_passwd_pattern">key_passwd_pattern</string>
+    <string name="key_is_passwd_pattern_uplock">key_passwd_pattern_uplock</string>
+    <string name="key_is_passwd_pattern_login">key_passwd_pattern_login</string>
+    <string name="key_is_notification">key_notification</string>
 
+    <string name="key_lock_mac">key_lock_mac</string>
     <string name="key_num_passwd">key_num_passwd</string>
 
 </resources>

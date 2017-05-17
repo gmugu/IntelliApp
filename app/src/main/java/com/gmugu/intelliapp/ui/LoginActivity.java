@@ -40,7 +40,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             startActivityForResult(new Intent(this, UpdatePasswordActivity.class), REQ_SET_PASSWD);
             return;
         }
-        if (preference.getBoolean(getResources().getString(R.string.key_passwd_pattern), false) && preference.getBoolean(getResources().getString(R.string.key_passwd_pattern_login), false)) {
+        if (preference.getBoolean(getResources().getString(R.string.key_is_passwd_pattern), false) && preference.getBoolean(getResources().getString(R.string.key_is_passwd_pattern_login), false)) {
             Intent compare = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN, null,
                     this, LockPatternActivity.class);
             startActivityForResult(compare, REQ_COMPARE_PATTERN);

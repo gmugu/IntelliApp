@@ -5,7 +5,7 @@
 
         <Preference
             android:defaultValue="false"
-            android:key="@string/key_passwd_num"
+            android:key="nima"
             android:title="修改数字密码">
             <intent
                 android:targetClass="com.gmugu.intelliapp.ui.UpdatePasswordActivity"
@@ -14,15 +14,15 @@
         <PreferenceScreen android:title="手势密码">
             <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/key_passwd_pattern"
+                android:key="@string/key_is_passwd_pattern"
                 android:title="手势密码" />
             <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/key_passwd_pattern_login"
+                android:key="@string/key_is_passwd_pattern_login"
                 android:title="手势密码登录" />
             <SwitchPreference
                 android:defaultValue="true"
-                android:key="@string/key_passwd_pattern_uplock"
+                android:key="@string/key_is_passwd_pattern_uplock"
                 android:title="手势密码解锁" />
             <Preference
                 android:enabled="false"
@@ -35,7 +35,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_passwd_finger"
+            android:key="@string/key_is_passwd_finger"
             android:title="指纹" />
     </PreferenceCategory>
     <PreferenceCategory android:title="设备管理">
@@ -47,7 +47,7 @@
     <PreferenceCategory android:title="消息管理">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_notification"
+            android:key="@string/key_is_notification"
             android:title="消息提醒" />
     </PreferenceCategory>
     <PreferenceCategory android:title="关于">

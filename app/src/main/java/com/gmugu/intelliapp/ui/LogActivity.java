@@ -2,7 +2,9 @@ package com.gmugu.intelliapp.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -37,6 +39,7 @@ public class LogActivity extends Activity {
     private ExpandableListView elvTimerShaft;
     private TextView elvMsgTv;
     private TimerShaftAdapter adapter;
+    private SharedPreferences defaultSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +49,20 @@ public class LogActivity extends Activity {
         elvTimerShaft = (ExpandableListView) findViewById(R.id.elv_timer_shaft);
         elvMsgTv = (TextView) findViewById(R.id.elv_msg);
 
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String lockMac = defaultSharedPreferences.getString(getResources().getString(R.string.key_lock_mac), null);
+        if (lockMac == null) {
+            Toast.makeText(this, "未绑定门锁,请前往设置中扫描二维码进行绑定", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setTitle("正在联网");
         progressDialog.setIndeterminate(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        Observable<Result<List<LogBean>>> observable = ApiModule.provideCloudApi().getLog("mac");
+        Observable<Result<List<LogBean>>> observable = ApiModule.provideCloudApi().getLog(lockMac);
         observable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

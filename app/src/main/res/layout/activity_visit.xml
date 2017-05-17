@@ -33,6 +33,15 @@
             android:text="解锁"
             android:textColor="#ffffff" />
 
+        <Button
+            android:id="@+id/ignore_bn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/bn_selector"
+            android:text="别理他!"
+            android:textColor="#ffffff" />
+
     </LinearLayout>
 
 </LinearLayout>

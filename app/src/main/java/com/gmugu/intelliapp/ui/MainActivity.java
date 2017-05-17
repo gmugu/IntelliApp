@@ -2,20 +2,40 @@ package com.gmugu.intelliapp.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.gmugu.intelliapp.R;
+import com.gmugu.intelliapp.data.ApiModule;
+import com.gmugu.intelliapp.data.model.Result;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import haibison.android.lockpattern.LockPatternActivity;
 import haibison.android.lockpattern.utils.AlpSettings;
+import okhttp3.ResponseBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends Activity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
     private static final int REQUEST_CODE_QRCODE_PERMISSIONS = 1;
@@ -26,6 +46,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
     private View logBn;
     private View settingBn;
     private Context mContext;
+    private SharedPreferences defaultSharedPreferences;
 
 
     @Override
@@ -33,6 +54,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         initView();
         AlpSettings.Security.setAutoSavePattern(this, true);
     }
@@ -91,6 +113,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
             case RESULT_OK:
                 //用户通过验证
                 Log.d(TAG, "user passed");
+                unlock(mContext);
                 break;
             case RESULT_CANCELED:
                 // 用户取消
@@ -117,9 +140,45 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.unlock_bn:
-                Intent compare = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN, null,
-                        this, LockPatternActivity.class);
-                startActivityForResult(compare, REQ_UNLOCK);
+                boolean isUseFinger = defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_is_passwd_finger), false);
+                boolean isUsePattern = defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_is_passwd_pattern), false)
+                        && defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_is_passwd_pattern_uplock), false);
+                if (isUseFinger) {
+// TODO: 17/5/17 指纹
+                } else if (isUsePattern) {
+                    Intent compare = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN, null,
+                            this, LockPatternActivity.class);
+                    startActivityForResult(compare, REQ_UNLOCK);
+                } else {
+                    final EditText editText = new EditText(this);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                    new AlertDialog.Builder(this)
+                            .setTitle("请输入密码")
+                            .setView(editText)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String passwd = editText.getText().toString();
+                                    if (passwd.equals("")) {
+                                        Toast.makeText(mContext, "密码不能为空", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    if (passwd.length() < 6) {
+                                        Toast.makeText(mContext, "密码长度必须大于6", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    String numPsaawd = defaultSharedPreferences.getString(getResources().getString(R.string.key_num_passwd), null);
+                                    if (!passwd.equals(numPsaawd)) {
+                                        Toast.makeText(mContext, "密码错误", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    unlock(mContext);
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+
 
                 break;
             case R.id.visitor_bn:
@@ -132,5 +191,51 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
         }
+    }
+
+    public static void unlock(final Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        String code = wifiManager.getConnectionInfo().getMacAddress();
+        if (code == null) {
+            Toast.makeText(context, "请打开WIFI", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("正在解锁");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        ApiModule.provideLockApi().openLock(code)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Result>() {
+                    @Override
+                    public void onCompleted() {
+                        progressDialog.cancel();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "未知错误:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressDialog.cancel();
+                    }
+
+                    @Override
+                    public void onNext(Result result) {
+                        try {
+                            if (result.code != 0) {
+                                throw new Exception(result.msg);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "解锁失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                });
+
     }
 }

@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.gmugu.intelliapp.R;
 import com.gmugu.intelliapp.data.ApiModule;
 import com.gmugu.intelliapp.data.ILockApi;
+import com.gmugu.intelliapp.data.model.AddDeviceBean;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,16 +56,16 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
         addPreferencesFromResource(R.xml.preferences);
         mContext = this;
         Resources res = getResources();
-        passwdPatternPreference = (SwitchPreference) findPreference(res.getString(R.string.key_passwd_pattern));
-        passwdPatternPreferenceLogin = (SwitchPreference) findPreference(res.getString(R.string.key_passwd_pattern_login));
-        passwdPatternPreferenceUplock = (SwitchPreference) findPreference(res.getString(R.string.key_passwd_pattern_uplock));
-        passwdFingerPreference = (SwitchPreference) findPreference(res.getString(R.string.key_passwd_finger));
+        passwdPatternPreference = (SwitchPreference) findPreference(res.getString(R.string.key_is_passwd_pattern));
+        passwdPatternPreferenceLogin = (SwitchPreference) findPreference(res.getString(R.string.key_is_passwd_pattern_login));
+        passwdPatternPreferenceUplock = (SwitchPreference) findPreference(res.getString(R.string.key_is_passwd_pattern_uplock));
+        passwdFingerPreference = (SwitchPreference) findPreference(res.getString(R.string.key_is_passwd_finger));
         updataPatternPreference = findPreference("updataPasswdPattern");
         updataPatternPreference.setOnPreferenceClickListener(this);
         bindDevicePreference = findPreference("bindDevice");
         bindDevicePreference.setOnPreferenceClickListener(this);
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_passwd_pattern), false)) {
+        if (defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_is_passwd_pattern), false)) {
             setPatternSubmenuEnable(true);
         } else {
             setPatternSubmenuEnable(false);
@@ -89,7 +91,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, key);
         Resources res = getResources();
-        if (res.getString(R.string.key_passwd_pattern).equals(key)) {
+        if (res.getString(R.string.key_is_passwd_pattern).equals(key)) {
             boolean value = sharedPreferences.getBoolean(key, false);
             if (value) {
                 Intent intent = new Intent(
@@ -102,9 +104,9 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                 startActivityForResult(compare, REQ_CLOSE_PATTERN);
             }
 
-        } else if (res.getString(R.string.key_passwd_finger).equals(key)) {
+        } else if (res.getString(R.string.key_is_passwd_finger).equals(key)) {
 
-        } else if (res.getString(R.string.key_notification).equals(key)) {
+        } else if (res.getString(R.string.key_is_notification).equals(key)) {
 
         }
     }
@@ -133,7 +135,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
 
     private void handleBindDevice(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            String result = data.getStringExtra("result");
+            final String result = data.getStringExtra("result");
             int index = -1;
             String name = "";
             String code = "";
@@ -144,7 +146,8 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
             try {
-                index = Integer.parseInt(result.split("=")[1]);
+                final AddDeviceBean addDeviceBean = new Gson().fromJson(result, AddDeviceBean.class);
+                index = addDeviceBean.index;
                 name = android.os.Build.MODEL;
                 name = name.replaceAll(" ", "_");
                 WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
@@ -156,6 +159,9 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                             @Override
                             public void onCompleted() {
                                 progressDialog.cancel();
+                                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                                editor.putString(getResources().getString(R.string.key_lock_mac), addDeviceBean.lockMac);
+                                editor.commit();
                             }
 
                             @Override
