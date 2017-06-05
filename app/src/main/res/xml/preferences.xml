@@ -33,10 +33,10 @@
         </PreferenceScreen>
 
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_is_passwd_finger"
-            android:title="指纹" />
+        <!--<SwitchPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:key="@string/key_is_passwd_finger"-->
+            <!--android:title="指纹" />-->
     </PreferenceCategory>
     <PreferenceCategory android:title="设备管理">
         <Preference

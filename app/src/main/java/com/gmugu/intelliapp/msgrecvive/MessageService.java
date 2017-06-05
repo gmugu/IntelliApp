@@ -2,9 +2,13 @@ package com.gmugu.intelliapp.msgrecvive;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.SoundPool;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -17,6 +21,9 @@ import com.gmugu.intelliapp.R;
 public class MessageService extends Service {
     private final static String TAG = MessageService.class.getSimpleName();
     private Recviver pushRecviver;
+    private SharedPreferences defaultSharedPreferences;
+    private SoundPool soundPool;
+    private int tsSoundId;
 
     @Nullable
     @Override
@@ -26,8 +33,11 @@ public class MessageService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         Log.v(TAG, "***** MessageService *****: onCreate");
+        super.onCreate();
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        soundPool = new SoundPool(2,1,0);
+        tsSoundId = soundPool.load(this, R.raw.ts,1);
     }
 
     @Override
@@ -39,7 +49,10 @@ public class MessageService extends Service {
                 @Override
                 public void onRecviveData(byte[] data) {
                     Log.d(TAG, new String(data));
-                    sendNotification("通知", new String(data));
+                    boolean isNotification = defaultSharedPreferences.getBoolean(getResources().getString(R.string.key_is_notification), true);
+                    if (isNotification) {
+                        sendNotification("通知", "访客来访");
+                    }
                 }
             });
             pushRecviver.startRecvive();
@@ -47,6 +60,7 @@ public class MessageService extends Service {
     }
 
     private static int notifyId = 0;
+
     private void sendNotification(String title, String text) {
         NotificationManager notifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification noti = new Notification.Builder(this)
@@ -56,5 +70,6 @@ public class MessageService extends Service {
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS)
                 .getNotification();
         notifyManager.notify(++notifyId, noti);
+        soundPool.play(tsSoundId,1,1,0,0,1);
     }
 }

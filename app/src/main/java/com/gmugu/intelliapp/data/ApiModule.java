@@ -26,7 +26,7 @@ public class ApiModule {
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .baseUrl("http://192.168.1.88/")
+                    .baseUrl("http://192.168.1.88:81/")
                     .build();
             lockApi = retrofit.create(ILockApi.class);
         }
@@ -44,7 +44,7 @@ public class ApiModule {
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .baseUrl("http://192.168.23.2:8080/")
+                    .baseUrl("http://192.168.1.99:8080/")
                     .build();
             cloudApi = retrofit.create(ICloudApi.class);
         }
